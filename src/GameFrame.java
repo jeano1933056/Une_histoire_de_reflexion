@@ -4,8 +4,7 @@ public class GameFrame extends JFrame{
 
     GameFrame(){
 
-        this.add(new GamePanel());
-        //this.add(new MainMenu());
+        this.add(new MainMenu());
         this.setTitle("Chats");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
