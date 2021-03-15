@@ -21,11 +21,21 @@ public class GamePanel extends JPanel implements ActionListener{
     int positionY = 13;
     int playerX = positionX * GROSSEUR_UNITE;
     int playerY = positionY * GROSSEUR_UNITE;
+    public static enum STATE{
+        GAME,
+        MENU
+    }
+    public static STATE state = STATE.GAME;
+    MainMenu menu;
 
     static final int DELAY = 75;
     Random random;
     static boolean gameOn = false;
     Timer timer;
+
+    public Rectangle niveau1 = new Rectangle(GamePanel.LARGEUR_ECRAN/2 - 75, 100, 150, 50 );
+    public Rectangle niveau2 = new Rectangle(GamePanel.LARGEUR_ECRAN/2 - 75, 200, 150, 50 );
+    public Rectangle niveau3 = new Rectangle(GamePanel.LARGEUR_ECRAN/2 - 75, 300, 150, 50 );
 
     Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
 
@@ -38,6 +48,8 @@ public class GamePanel extends JPanel implements ActionListener{
 
 
     GamePanel() {
+        random = new Random();
+        menu = new MainMenu();
         this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
         this.setBackground(new Color(244, 202, 224));
         this.setFocusable(true);
@@ -49,10 +61,14 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void start() {
-        //nouvelleProie();
+
         ouvert = true;
-        timer = new Timer(DELAY, this);
-        timer.start();
+        if(state == STATE.GAME) {
+            nouvelleProie();
+            timer = new Timer(DELAY, this);
+            timer.start();
+        }
+
     }
 
     public void pause() {
@@ -74,25 +90,36 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void dessiner(Graphics g) {
-        if (ouvert) {
-            for (int i = 0; i < (HAUTEUR_ECRAN/GROSSEUR_UNITE); i++) {
-                g.setColor(new Color(173, 167, 201));
-                g.drawLine(i * GROSSEUR_UNITE, 0, i * GROSSEUR_UNITE, HAUTEUR_ECRAN);
-                g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
+        if(state == STATE.GAME) {
+            if (ouvert) {
+                for (int i = 0; i < (HAUTEUR_ECRAN / GROSSEUR_UNITE); i++) {
+                    g.setColor(new Color(173, 167, 201));
+                    g.drawLine(i * GROSSEUR_UNITE, 0, i * GROSSEUR_UNITE, HAUTEUR_ECRAN);
+                    g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
+                }
+
+                g.setColor(new Color(100, 166, 189));
+                g.fillRect(playerX, playerY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+
+                g.setColor(Color.GRAY);
+                g.fillRect(positionX, positionY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+
+            } else {
+                //gameover(g)
             }
-
-            g.setColor(new Color(100, 166, 189));
-            g.fillRect(playerX, playerY, GROSSEUR_UNITE, GROSSEUR_UNITE);
-
-        } else {
-            //gameover(g)
+        }
+        if(state == STATE.MENU) {
+            g.setColor(Color.RED);
+            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+            FontMetrics metrics = g.getFontMetrics(g.getFont());
+            g.drawString("Une histoire de reflexion", (GamePanel.LARGEUR_ECRAN - metrics.stringWidth("Une histoire de reflexion")) / 2, g.getFont().getSize());
         }
 
     }
 
     public void nouvelleProie(){
-        //positionX = random.nextInt((int)(LARGEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
-        //positionY = random.nextInt((int)(HAUTEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
+        positionX = random.nextInt((int)(LARGEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
+        positionY = random.nextInt((int)(HAUTEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
     }
 
     public void verifierCollision() {
@@ -139,6 +166,12 @@ public class GamePanel extends JPanel implements ActionListener{
                     else {
                         pause();
                     }
+                    break;
+                case KeyEvent.VK_ENTER :
+                    if(state == STATE.MENU)
+                        state = STATE.GAME;
+                    else if (state == STATE.GAME)
+                        state = STATE.MENU;
                     break;
             }
         }
