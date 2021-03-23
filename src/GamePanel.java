@@ -19,10 +19,14 @@ public class GamePanel extends JPanel implements ActionListener{
     int proies;
     int positionX;
     int positionY;
-    int playerX = positionX * GROSSEUR_UNITE;
-    int playerY = positionY * GROSSEUR_UNITE;
+    int playerX = GROSSEUR_UNITE;
+    int playerY = GROSSEUR_UNITE;
     char direction = 'R';
     int[][] mur = new int[LARGEUR_ECRAN][HAUTEUR_ECRAN];
+    boolean mursL = false;
+    boolean mursR = false;
+    boolean mursU = false;
+    boolean mursD = false;
     public static enum STATE{
         GAME,
         MENU
@@ -30,7 +34,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public static STATE state = STATE.GAME;
     MainMenu menu;
 
-    static final int DELAY = 75;
+    static final int DELAY = 50;
     Random random;
     static boolean gameOn = false;
     Timer timer;
@@ -93,27 +97,34 @@ public class GamePanel extends JPanel implements ActionListener{
     public void dessiner(Graphics g) {
         if(state == STATE.GAME) {
             if (ouvert) {
-                for (int i = 0; i < (HAUTEUR_ECRAN / GROSSEUR_UNITE); i++) {
+                g.setColor(new Color(100, 166, 189));
+                g.fillRect(playerX, playerY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            }
+            for (int i = 0; i < (HAUTEUR_ECRAN / GROSSEUR_UNITE); i++) {
                     g.setColor(new Color(173, 167, 201));
                     g.drawLine(i * GROSSEUR_UNITE, 0, i * GROSSEUR_UNITE, HAUTEUR_ECRAN);
                     g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
                 }
 
-                g.setColor(new Color(100, 166, 189));
-                g.fillRect(playerX, playerY, GROSSEUR_UNITE, GROSSEUR_UNITE);
-
                 g.setColor(Color.BLUE);
                 g.fillOval(positionX, positionY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
                 for(int i = 0; i < GROSSEUR_UNITE * 8; i++){
-                    mur[GROSSEUR_UNITE * 8][i] = 1;
+                    mur[GROSSEUR_UNITE * 3][i] = 1;
+                    mur[GROSSEUR_UNITE * 4][i] = 1;
                     g.setColor(Color.GRAY);
                     g.fillRect(GROSSEUR_UNITE * 3, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
+                    g.fillRect(GROSSEUR_UNITE * 4, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
+                }
+                for(int i = GROSSEUR_UNITE * 6; i < LARGEUR_ECRAN; i++){
+                    mur[i][GROSSEUR_UNITE * 14] = 1;
+                    mur[i][GROSSEUR_UNITE * 15] = 1;
+                    g.setColor(Color.GRAY);
+                    g.fillRect(i, GROSSEUR_UNITE * 14, GROSSEUR_UNITE, GROSSEUR_UNITE);
+                    g.fillRect(i, GROSSEUR_UNITE * 15, GROSSEUR_UNITE, GROSSEUR_UNITE);
                 }
 
-            } else {
-                //gameover(g)
-            }
+
         }
         if(state == STATE.MENU) {
             g.setColor(Color.RED);
@@ -131,11 +142,22 @@ public class GamePanel extends JPanel implements ActionListener{
 
     public void verifierCollision() {
 
-        for(int i = 0; i < mur.length; i++){
-            for(int j = 0; j < mur[i].length; j++){
-                if(mur[i][j] == 1){
-                 //   ouvert = false;
-                }
+        for(int z = 0; z <= GROSSEUR_UNITE * 9; z++) {
+            if (playerX == GROSSEUR_UNITE * 5 && playerY == z - 1) {
+                mursL = true;
+            } else if (playerX == GROSSEUR_UNITE * 2 && playerY == z - 1) {
+                mursR = true;
+            } else if ((playerX == GROSSEUR_UNITE * 3 || playerX == GROSSEUR_UNITE * 4) && playerY == z + 1) {
+                mursU = true;
+            }
+        }
+        for(int i = GROSSEUR_UNITE * 5; i < LARGEUR_ECRAN; i++) {
+            if (playerY == GROSSEUR_UNITE * 13 && playerX == i - 1) {
+                mursD = true;
+            } else if (playerY == GROSSEUR_UNITE * 16 && playerX == i - 1) {
+                mursU = true;
+            } else if ((playerY == GROSSEUR_UNITE * 14 || playerY == GROSSEUR_UNITE * 15 )&& playerX == i - 1) {
+                mursR = true;
             }
         }
     }
@@ -165,7 +187,6 @@ public class GamePanel extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (ouvert) {
             verifierCollision();
-            mouvement();
         }
         repaint();
     }
@@ -173,7 +194,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()){
+          /*  switch (e.getKeyCode()){
                 case KeyEvent.VK_LEFT :
                     direction = 'L';
                     break;
@@ -192,27 +213,40 @@ public class GamePanel extends JPanel implements ActionListener{
                     }
                     else if(state == STATE.MENU)
                         state = STATE.GAME;
-            }
+            } */
 
-           /* switch(e.getKeyCode()){
+            switch(e.getKeyCode()){
                 case KeyEvent.VK_LEFT:
                     if (playerX > 0 && timer.isRunning()) {
-                        playerX = playerX - GROSSEUR_UNITE;
+                        if(!mursL) {
+                            playerX = playerX - GROSSEUR_UNITE;
+                        }
+                        else
+                            mursL = false;
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
                     if (playerX <= BORDER_NUMBER_X && timer.isRunning()) {
-                        playerX = playerX + GROSSEUR_UNITE;
+                        if(!mursR)
+                            playerX = playerX + GROSSEUR_UNITE;
+                        else
+                            mursR = false;
                     }
                     break;
                 case KeyEvent.VK_UP:
                     if (playerY > 0 && timer.isRunning()) {
-                        playerY = playerY - GROSSEUR_UNITE;
+                        if(!mursU)
+                            playerY = playerY - GROSSEUR_UNITE;
+                        else
+                            mursU = false;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
                     if (playerY <= BORDER_NUMBER_Y && timer.isRunning()) {
-                        playerY = playerY + GROSSEUR_UNITE;
+                        if(!mursD)
+                            playerY = playerY + GROSSEUR_UNITE;
+                        else
+                            mursD = false;
                     }
                     break;
                 case KeyEvent.VK_SPACE:
@@ -229,7 +263,7 @@ public class GamePanel extends JPanel implements ActionListener{
                     else if (state == STATE.GAME)
                         state = STATE.MENU;
                     break;
-            }*/
+            }
         }
     }
 }
