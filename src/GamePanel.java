@@ -17,18 +17,20 @@ public class GamePanel extends JPanel implements ActionListener{
     int x = GAME_UNITS;
     int y = GAME_UNITS;
     int proies;
-    int positionX;
-    int positionY;
-    int playerX = GROSSEUR_UNITE;
-    int playerY = GROSSEUR_UNITE;
-    int porteX = LARGEUR_ECRAN - GROSSEUR_UNITE;
-    int porteY = LARGEUR_ECRAN - GROSSEUR_UNITE;
-    char direction = 'R';
+    public static int positionX;
+    public static int positionY;
+    public static int playerX = GROSSEUR_UNITE;
+    public static int playerY = GROSSEUR_UNITE;
+    public static int porteX = LARGEUR_ECRAN - GROSSEUR_UNITE;
+    public static int porteY = LARGEUR_ECRAN - GROSSEUR_UNITE;
+    public static char direction = 'R';
     int[][] mur = new int[LARGEUR_ECRAN][HAUTEUR_ECRAN];
-    boolean mursL = false;
-    boolean mursR = false;
-    boolean mursU = false;
-    boolean mursD = false;
+    public static boolean mursL = false;
+    public static boolean mursR = false;
+    public static boolean mursU = false;
+    public static boolean mursD = false;
+    public static int blocX = 16 * GROSSEUR_UNITE;
+    public static int blocY = 12 * GROSSEUR_UNITE;
     public static enum STATE{
         GAME,
         MENU
@@ -45,6 +47,8 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     public static STATE state = STATE.MENU;
     public static NIVEAU niveau = NIVEAU.M;
+    Niveau1 niveau1;
+    Niveau2 niveau2;
 
     MainMenu menu;
 
@@ -66,6 +70,8 @@ public class GamePanel extends JPanel implements ActionListener{
     GamePanel() {
         random = new Random();
         menu = new MainMenu();
+        niveau1 = new Niveau1();
+        niveau2 = new Niveau2();
         this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
         this.setBackground(new Color(244, 202, 224));
         this.setFocusable(true);
@@ -83,11 +89,10 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void menu(){
-        playerX = GROSSEUR_UNITE;
-        playerY = GROSSEUR_UNITE;
+
         state = STATE.MENU;
         niveau = NIVEAU.M;
-        timer.stop();
+        //timer.stop();
     }
 
     public void niveau1(){
@@ -108,10 +113,18 @@ public class GamePanel extends JPanel implements ActionListener{
         timer.start();
     }
 
+    public static void gameOver(){
+        playerX = GROSSEUR_UNITE;
+        playerY = GROSSEUR_UNITE;
+    }
+
     public void finNiveau(){
         if (playerX == porteX && playerY == porteY) {
             menu();
+            playerX = GROSSEUR_UNITE;
+            playerY = GROSSEUR_UNITE;
         }
+
     }
 
     public void pause() {
@@ -145,30 +158,12 @@ public class GamePanel extends JPanel implements ActionListener{
                 g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
             }
 
-
-
             if (niveau == NIVEAU.N1) {
-                for (int i = 0; i < GROSSEUR_UNITE * 8; i++) {
-                    mur[GROSSEUR_UNITE * 3][i] = 1;
-                    mur[GROSSEUR_UNITE * 4][i] = 1;
-                    g.setColor(Color.GRAY);
-                    g.fillRect(GROSSEUR_UNITE * 3, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
-                    g.fillRect(GROSSEUR_UNITE * 4, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
-                }
-                for (int i = GROSSEUR_UNITE * 6; i < LARGEUR_ECRAN; i++) {
-                    mur[i][GROSSEUR_UNITE * 14] = 1;
-                    mur[i][GROSSEUR_UNITE * 15] = 1;
-                    g.setColor(Color.GRAY);
-                    g.fillRect(i, GROSSEUR_UNITE * 14, GROSSEUR_UNITE, GROSSEUR_UNITE);
-                    g.fillRect(i, GROSSEUR_UNITE * 15, GROSSEUR_UNITE, GROSSEUR_UNITE);
-                }
-                porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
-                porteY = GROSSEUR_UNITE;
-                g.setColor(Color.RED);
-                g.fillRect(porteX, porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+                niveau1.rendu(g);
+            }
 
-                g.setColor(Color.BLUE);
-                g.fillOval(positionX, positionY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            if(niveau == NIVEAU.N2){
+                niveau2.rendu(g);
             }
 
         }
@@ -186,24 +181,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public void verifierCollision() {
 
         if(niveau == NIVEAU.N1) {
-            for (int z = 0; z <= GROSSEUR_UNITE * 9; z++) {
-                if (playerX == GROSSEUR_UNITE * 5 && playerY == z - 1) {
-                    mursL = true;
-                } else if (playerX == GROSSEUR_UNITE * 2 && playerY == z - 1) {
-                    mursR = true;
-                } else if ((playerX == GROSSEUR_UNITE * 3 || playerX == GROSSEUR_UNITE * 4) && playerY == z + 1) {
-                    mursU = true;
-                }
-            }
-            for (int i = GROSSEUR_UNITE * 5; i < LARGEUR_ECRAN; i++) {
-                if (playerY == GROSSEUR_UNITE * 13 && playerX == i - 1) {
-                    mursD = true;
-                } else if (playerY == GROSSEUR_UNITE * 16 && playerX == i - 1) {
-                    mursU = true;
-                } else if ((playerY == GROSSEUR_UNITE * 14 || playerY == GROSSEUR_UNITE * 15) && playerX == i - 1) {
-                    mursR = true;
-                }
-            }
+            niveau1.collision();
         }
     }
 
