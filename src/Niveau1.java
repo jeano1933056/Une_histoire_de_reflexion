@@ -8,6 +8,17 @@ public class Niveau1 {
     public Niveau1() {
         GROSSEUR_UNITE = GamePanel.GROSSEUR_UNITE;
         LARGEUR_ECRAN = GamePanel.LARGEUR_ECRAN;
+        GamePanel.positionX1 = 1 * GROSSEUR_UNITE;
+        GamePanel.positionX2 = 4 * GROSSEUR_UNITE;
+        GamePanel.positionX3 = 8 * GROSSEUR_UNITE;
+        GamePanel.positionX4 = 12 * GROSSEUR_UNITE;
+        GamePanel.positionX5 = 18 * GROSSEUR_UNITE;
+
+        GamePanel.positionY1 = 7 * GROSSEUR_UNITE;
+        GamePanel.positionY2 = 17 * GROSSEUR_UNITE;
+        GamePanel.positionY3 = 10 * GROSSEUR_UNITE;
+        GamePanel.positionY4 = 4 * GROSSEUR_UNITE;
+        GamePanel.positionY5 = 2 * GROSSEUR_UNITE;
     }
 
     public void rendu(Graphics g){
@@ -21,7 +32,6 @@ public class Niveau1 {
             g.fillRect(i, GROSSEUR_UNITE * 14, GROSSEUR_UNITE, GROSSEUR_UNITE);
             g.fillRect(i, GROSSEUR_UNITE * 15, GROSSEUR_UNITE, GROSSEUR_UNITE);
         }
-
 
         for (int i = 0; i < 14 * GROSSEUR_UNITE; i++){
             if(i < GamePanel.blocY && GamePanel.blocX == 16 * GROSSEUR_UNITE) {
@@ -44,8 +54,15 @@ public class Niveau1 {
         g.setColor(Color.RED);
         g.fillRect(GamePanel.porteX, GamePanel.porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
+        g.setColor(Color.YELLOW);
+        g.fillRect(GamePanel.blocX, GamePanel.blocY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+
         g.setColor(Color.BLUE);
-        g.fillOval(GamePanel.positionX, GamePanel.positionY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX1, GamePanel.positionY1, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX2, GamePanel.positionY2, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX3, GamePanel.positionY3, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX4, GamePanel.positionY4, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX5, GamePanel.positionY5, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 
     public void collision(){

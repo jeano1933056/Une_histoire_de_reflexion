@@ -43,6 +43,6 @@ public class Niveau2 {
         g.fillRect(GamePanel.porteX, GamePanel.porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
         g.setColor(Color.BLUE);
-        g.fillOval(GamePanel.positionX, GamePanel.positionY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillOval(GamePanel.positionX1, GamePanel.positionY1, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 }
