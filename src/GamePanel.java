@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JPanel;
 import javax.swing.*;
+import java.awt.geom.Point2D;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener{
@@ -16,9 +17,19 @@ public class GamePanel extends JPanel implements ActionListener{
     static final int GAME_UNITS = (LARGEUR_ECRAN * HAUTEUR_ECRAN)/GROSSEUR_UNITE;
     int x = GAME_UNITS;
     int y = GAME_UNITS;
-    int proies;
-    public static int positionX;
-    public static int positionY;
+    public static int proies;
+    public static int positionX1;
+    public static int positionX2;
+    public static int positionX3;
+    public static int positionX4;
+    public static int positionX5;
+    public static int positionX6;
+    public static int positionY1;
+    public static int positionY2;
+    public static int positionY3;
+    public static int positionY4;
+    public static int positionY5;
+    public static int positionY6;
     public static int playerX = GROSSEUR_UNITE;
     public static int playerY = GROSSEUR_UNITE;
     public static int porteX = LARGEUR_ECRAN - GROSSEUR_UNITE;
@@ -84,12 +95,10 @@ public class GamePanel extends JPanel implements ActionListener{
 
     public void start() {
         ouvert = true;
-        nouvelleProie();
         timer = new Timer(DELAY, this);
     }
 
     public void menu(){
-
         state = STATE.MENU;
         niveau = NIVEAU.M;
         //timer.stop();
@@ -114,8 +123,9 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public static void gameOver(){
-        playerX = GROSSEUR_UNITE;
-        playerY = GROSSEUR_UNITE;
+        playerX = 0;
+        playerY = 0;
+        proies = proies - 5;
     }
 
     public void finNiveau(){
@@ -124,7 +134,6 @@ public class GamePanel extends JPanel implements ActionListener{
             playerX = GROSSEUR_UNITE;
             playerY = GROSSEUR_UNITE;
         }
-
     }
 
     public void pause() {
@@ -146,7 +155,6 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void dessiner(Graphics g) {
-
         if(state == STATE.GAME) {
             if (ouvert) {
                 g.setColor(new Color(100, 166, 189));
@@ -165,7 +173,6 @@ public class GamePanel extends JPanel implements ActionListener{
             if(niveau == NIVEAU.N2){
                 niveau2.rendu(g);
             }
-
         }
         else if (state == STATE.MENU) {
            menu.rendu(g);
@@ -173,20 +180,44 @@ public class GamePanel extends JPanel implements ActionListener{
 
     }
 
-    public void nouvelleProie(){
-        positionX = random.nextInt((int)(LARGEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
-        positionY = random.nextInt((int)(HAUTEUR_ECRAN/GROSSEUR_UNITE)) * GROSSEUR_UNITE;
+    public void checkProies(){
+        if((playerX == positionX1) && (playerY == positionY1)){
+            proies++;
+            System.out.println(proies);
+            positionX1 = -1 * GROSSEUR_UNITE;
+            positionY1 = -1 * GROSSEUR_UNITE;
+        }
+        else if((playerX == positionX2) && (playerY == positionY2)){
+            proies++;
+            System.out.println(proies);
+            positionX2 = -1 * GROSSEUR_UNITE;
+            positionY2 = -1 * GROSSEUR_UNITE;
+        }
+        else if((playerX == positionX3) && (playerY == positionY3)){
+            proies++;
+            System.out.println(proies);
+            positionX3 = -1 * GROSSEUR_UNITE;
+            positionY3 = -1 * GROSSEUR_UNITE;
+        } else if((playerX == positionX4) && (playerY == positionY4)){
+            proies++;
+            System.out.println(proies);
+            positionX4 = -1 * GROSSEUR_UNITE;
+            positionY4 = -1 * GROSSEUR_UNITE;
+        } else if((playerX == positionX5) && (playerY == positionY5)){
+            proies++;
+            System.out.println(proies);
+            positionX5 = -1 * GROSSEUR_UNITE;
+            positionY5 = -1 * GROSSEUR_UNITE;
+        }
     }
 
     public void verifierCollision() {
-
         if(niveau == NIVEAU.N1) {
             niveau1.collision();
         }
     }
 
     public void mouvement(){
-
         switch (direction){
             case 'U' :
                 playerY = playerY - GROSSEUR_UNITE;
@@ -210,6 +241,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (ouvert) {
             verifierCollision();
+            checkProies();
             finNiveau();
         }
         repaint();
@@ -245,6 +277,13 @@ public class GamePanel extends JPanel implements ActionListener{
                             mursU = false;
                     }
                     break;
+
+                    case KeyEvent.VK_E:
+                    if (blocY > 0 && timer.isRunning() && state == STATE.GAME) {
+                        blocY = blocY - GROSSEUR_UNITE;
+                    }
+                    break;
+
                 case KeyEvent.VK_DOWN:
                     if (playerY <= BORDER_NUMBER_Y && timer.isRunning() && state == STATE.GAME) {
                         if(!mursD)
