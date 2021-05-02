@@ -37,12 +37,12 @@ public class Niveau2 {
         }
 
 
-        GamePanel.porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
-        GamePanel.porteY = GROSSEUR_UNITE;
+        //GamePanel.porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
+        //GamePanel.porteY = GROSSEUR_UNITE;
         g.setColor(Color.RED);
-        g.fillRect(GamePanel.porteX, GamePanel.porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        //g.fillRect(GamePanel.porteX, GamePanel.porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
         g.setColor(Color.BLUE);
-        g.fillOval(GamePanel.positionX1, GamePanel.positionY1, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        //g.fillOval(GamePanel.positionX1, GamePanel.positionY1, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 }
