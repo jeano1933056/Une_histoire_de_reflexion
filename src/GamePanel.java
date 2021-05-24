@@ -108,7 +108,10 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void finNiveau(){
-        if(niveau == NIVEAU.N3){
+        if(niveau == NIVEAU.N1){
+            niveau1.finNiveau();
+        }
+        else if(niveau == NIVEAU.N3){
             niveau3.finNiveau();
         }
     }
