@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Niveau1 {
@@ -23,6 +24,9 @@ public class Niveau1 {
     private int blocY;
     private int porteX;
     private int porteY;
+    private int checkX;
+    private int checkY;
+
 
     public Niveau1() {
         GROSSEUR_UNITE = GamePanel.GROSSEUR_UNITE;
@@ -46,6 +50,10 @@ public class Niveau1 {
         blocY = 12 * GROSSEUR_UNITE;
         porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
         porteY = GROSSEUR_UNITE;
+        checkX = 3 * GROSSEUR_UNITE;
+        checkY = 16 * GROSSEUR_UNITE;
+
+        Popup pop = new Popup();
     }
 
     public void rendu(Graphics g){
@@ -69,6 +77,9 @@ public class Niveau1 {
                         g.drawRect(j, blocY, 2, 2);
                         g.setColor(Color.RED);
                     }
+                    for(int j = 0; j < blocX; j++){
+                        g.drawRect(j, blocY, 2, 2);
+                    }
                 }
             }
             else if (blocX != 4 * GROSSEUR_UNITE){
@@ -85,6 +96,8 @@ public class Niveau1 {
             g.setColor(Color.BLACK);
         }
         g.fillRect(porteX, porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+
+        g.fillRect(checkX, checkY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
         g.setColor(Color.YELLOW);
         g.fillRect(blocX, blocY, GROSSEUR_UNITE, GROSSEUR_UNITE);
@@ -119,23 +132,23 @@ public class Niveau1 {
             }
         }
 
-       /* if (blocY < GROSSEUR_UNITE * 13 && blocX == GROSSEUR_UNITE * 16) {
-            for (int i = 0; i < blocY; i++) {
-                if (GamePanel.playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i - 1) {
+        if (blocY > GROSSEUR_UNITE * 3 && blocX == GROSSEUR_UNITE * 4) {
+            for (int i = 3 * GROSSEUR_UNITE; i < blocY; i++) {
+                if (GamePanel.playerX == GROSSEUR_UNITE * 3 && GamePanel.playerY == i - 1) {
                     GamePanel.mursR = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i - 1){
+                else if (GamePanel.playerX == GROSSEUR_UNITE * 4 && GamePanel.playerY == i - 1){
                     GamePanel.mursL = true;
                     GamePanel.gameOver();
                 }
             }
-            for (int j = blocX; j < LARGEUR_ECRAN; j++) {
+            for (int j = 0; j < blocX; j++) {
                 if (GamePanel.playerY == blocY && GamePanel.playerX == j - 1){
                     GamePanel.mursU = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerY == blocY - 1 && GamePanel.playerX == j - 1){
+                else if (GamePanel.playerY == blocY - GROSSEUR_UNITE && GamePanel.playerX == j - 1){
                     GamePanel.mursD = true;
                     GamePanel.gameOver();
                 }
@@ -152,7 +165,7 @@ public class Niveau1 {
                     GamePanel.gameOver();
                 }
             }
-        } */
+        }
     }
 
     public void checkProies(){
@@ -184,5 +197,17 @@ public class Niveau1 {
             positionX5 = -1 * GROSSEUR_UNITE;
             positionY5 = -1 * GROSSEUR_UNITE;
         }
+        if((GamePanel.playerX == checkX) && (GamePanel.playerY == checkY)){
+            check = true;
+        }
+    }
+
+    public void finNiveau(){
+        if (GamePanel.playerY == porteY && GamePanel.playerX == porteX) {
+            GamePanel.menu();
+        }
+    }
+
+    public void storyline(){
     }
 }
