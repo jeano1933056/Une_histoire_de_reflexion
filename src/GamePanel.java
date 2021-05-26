@@ -23,6 +23,12 @@ public class GamePanel extends JPanel implements ActionListener{
     public static boolean mursR = false;
     public static boolean mursU = false;
     public static boolean mursD = false;
+
+    public static boolean blocR = false;
+    public static boolean blocL = false;
+    public static boolean blocU = false;
+    public static boolean blocD = false;
+
     //public static int blocX = 16 * GROSSEUR_UNITE;
     //public static int blocY = 12 * GROSSEUR_UNITE;
     public static enum STATE{
@@ -68,15 +74,24 @@ public class GamePanel extends JPanel implements ActionListener{
         niveau1 = new Niveau1();
         niveau2 = new Niveau2();
         niveau3 = new Niveau3();
+
         this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
         this.setBackground(new Color(244, 202, 224));
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+
+        //blocXniveau1 = niveau1.getBlocXniveau1();
+        //blocXniveau1 = niveau1.getBlocXniveau1();
+        //blocYniveau1 = niveau1.getBlocYniveau1();
+
+
+
         this.setCursor(cursor);
         this.add(label);
         label.setVisible(false);
         start();
     }
+
 
     public void start() {
         ouvert = true;
@@ -210,22 +225,12 @@ public class GamePanel extends JPanel implements ActionListener{
         }
     }
 
-    public void mouvement(){
-        switch (direction){
-            case 'U' :
-                playerY = playerY - GROSSEUR_UNITE;
-                break;
-            case 'D' :
-                if (playerX <= BORDER_NUMBER_X && timer.isRunning()) {
-                    playerX = playerX + GROSSEUR_UNITE;
-                }
-                break;
-            case 'L' :
-                playerX = playerX - GROSSEUR_UNITE;
-                break;
-            case 'R' :
-                playerX = playerX + GROSSEUR_UNITE;
-                break;
+    public void verifierCollisionBlocVerre() {
+        if (niveau == NIVEAU.N1){
+            niveau1.toucheLeBloc();
+
+        }
+        else if (niveau == NIVEAU.N3) {
 
         }
     }
@@ -241,6 +246,7 @@ public class GamePanel extends JPanel implements ActionListener{
         if (ouvert) {
             verifierCollision();
             checkProies();
+            verifierCollisionBlocVerre();
             finNiveau();
         }
         repaint();
@@ -267,6 +273,7 @@ public class GamePanel extends JPanel implements ActionListener{
                         else
                             mursR = false;
                     }
+
                     break;
                 case KeyEvent.VK_UP:
                     if (playerY > 0 && timer.isRunning() && state == STATE.GAME) {
@@ -277,7 +284,7 @@ public class GamePanel extends JPanel implements ActionListener{
                     }
                     break;
 
-                    case KeyEvent.VK_E:
+                case KeyEvent.VK_E:
                     if (niveau3.getBlocY() > 0 && timer.isRunning() && state == STATE.GAME) {
                         niveau3.setBlocY(niveau3.getBlocY() - GROSSEUR_UNITE);
                     }

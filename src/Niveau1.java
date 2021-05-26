@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Niveau1 {
 
@@ -27,12 +29,18 @@ public class Niveau1 {
     private int checkX;
     private int checkY;
 
+    private int playerX;
+    private int playerY;
+
 
     public Niveau1() {
         GROSSEUR_UNITE = GamePanel.GROSSEUR_UNITE;
         LARGEUR_ECRAN = GamePanel.LARGEUR_ECRAN;
         HAUTEUR_ECRAN = GamePanel.HAUTEUR_ECRAN;
         check = false;
+
+        playerX = GamePanel.playerX;
+        playerY = GamePanel.playerY;
 
         positionX1 = 0;
         positionX2 = 0;
@@ -46,15 +54,18 @@ public class Niveau1 {
         positionY4 = 7 * GROSSEUR_UNITE;
         positionY5 = 8 * GROSSEUR_UNITE;
 
-        blocX = 4 * GROSSEUR_UNITE;
+        blocX = 6 * GROSSEUR_UNITE;
         blocY = 12 * GROSSEUR_UNITE;
         porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
         porteY = GROSSEUR_UNITE;
         checkX = 3 * GROSSEUR_UNITE;
         checkY = 16 * GROSSEUR_UNITE;
 
+
+
         Popup pop = new Popup();
     }
+
 
     public void rendu(Graphics g){
         for (int i = 0; i < GROSSEUR_UNITE * 6; i++) {
@@ -110,6 +121,18 @@ public class Niveau1 {
         g.fillOval(positionX5, positionY5, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 
+    public void toucheLeBloc(){
+        if (GamePanel.playerX == blocX && GamePanel.playerY == blocY && blocX!=0){
+            blocX = blocX - GROSSEUR_UNITE;
+        } else if (GamePanel.playerX + GROSSEUR_UNITE == blocX && GamePanel.playerY == blocY){
+            blocX = blocX + GROSSEUR_UNITE;
+        } else if (GamePanel.playerY == blocY + GROSSEUR_UNITE && GamePanel.playerX == blocX){
+            blocY = blocY - GROSSEUR_UNITE;
+        } else if (GamePanel.playerY == blocY - GROSSEUR_UNITE && GamePanel.playerX == blocX){
+            blocY = blocY + GROSSEUR_UNITE;
+        }
+    }
+
     public void collision(){
         for (int z = 0; z <= GROSSEUR_UNITE * 7; z++) {
             if (GamePanel.playerY == GROSSEUR_UNITE * 4 && GamePanel.playerX == z - 1) {
@@ -131,6 +154,8 @@ public class Niveau1 {
                 GamePanel.mursD = true;
             }
         }
+
+
 
         if (blocY > GROSSEUR_UNITE * 3 && blocX == GROSSEUR_UNITE * 4) {
             for (int i = 3 * GROSSEUR_UNITE; i < blocY; i++) {
