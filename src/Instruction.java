@@ -18,12 +18,12 @@ public class Instruction {
                 metrics2.stringWidth("Utilise les flèches du clavier pour te déplacer.") / 2), 7 * GamePanel.GROSSEUR_UNITE);
         g2d.drawString("Fais attention au laser, utilise les blocs pour dévier leur direction.", ((GamePanel.LARGEUR_ECRAN/2) -
                 metrics2.stringWidth("Fais attention au laser, utilise les blocs pour dévier leur direction.") / 2), 9 * GamePanel.GROSSEUR_UNITE);
-        g2d.drawString("Clique la touche espace pour mettre le jeu sur pause. Essaie d'attraper toutes les proies!", ((GamePanel.LARGEUR_ECRAN/2) -
-                metrics2.stringWidth("Clique la touche espace pour mettre le jeu sur pause. Essaie d'attraper toutes les proies!") / 2), 11 * GamePanel.GROSSEUR_UNITE);
-        g2d.drawString("Pour commencer le jeu, clique le numéro du niveau auquel tu veux accéder.", ((GamePanel.LARGEUR_ECRAN/2) -
-                metrics2.stringWidth("Pour commencer le jeu, clique le numéro du niveau auquel tu veux accéder.") / 2), 13 * GamePanel.GROSSEUR_UNITE);
-        g2d.drawString("Pour quitter les instructions ou pour les voir à nouveau, clique 'f'", ((GamePanel.LARGEUR_ECRAN/2) -
-                metrics2.stringWidth("Pour quitter les instructions ou pour les voir à nouveau, clique 'f'") / 2), 15 * GamePanel.GROSSEUR_UNITE);
+        g2d.drawString("Appuyer sur la touche espace pour mettre le jeu sur pause. Essaie d'attraper toutes les proies!", ((GamePanel.LARGEUR_ECRAN/2) -
+                metrics2.stringWidth("Appuyer sur la touche espace pour mettre le jeu sur pause. Essaie d'attraper toutes les proies!") / 2), 11 * GamePanel.GROSSEUR_UNITE);
+        g2d.drawString("Pour commencer le jeu, Appuyer sur le numéro du niveau auquel tu veux accéder.", ((GamePanel.LARGEUR_ECRAN/2) -
+                metrics2.stringWidth("Pour commencer le jeu, Appuyer sur le numéro du niveau auquel tu veux accéder.") / 2), 13 * GamePanel.GROSSEUR_UNITE);
+        g2d.drawString("Pour quitter les instructions ou pour les voir à nouveau, Appuyer sur 'f'", ((GamePanel.LARGEUR_ECRAN/2) -
+                metrics2.stringWidth("Pour quitter les instructions ou pour les voir à nouveau, Appuyer sur 'f'") / 2), 15 * GamePanel.GROSSEUR_UNITE);
 
     }
 }

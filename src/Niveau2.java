@@ -6,6 +6,7 @@ public class Niveau2 {
 
     private int GROSSEUR_UNITE;
     private int LARGEUR_ECRAN;
+    private int HAUTEUR_ECRAN;
 
     private int positionX1;
     private int positionX2;
@@ -25,20 +26,21 @@ public class Niveau2 {
     public Niveau2() {
         GROSSEUR_UNITE = GamePanel.GROSSEUR_UNITE;
         LARGEUR_ECRAN = GamePanel.LARGEUR_ECRAN;
+        HAUTEUR_ECRAN = GamePanel.HAUTEUR_ECRAN;
         positionX1 = GROSSEUR_UNITE;
-        positionX2 = 4 * GROSSEUR_UNITE;
-        positionX3 = 8 * GROSSEUR_UNITE;
-        positionX4 = 12 * GROSSEUR_UNITE;
-        positionX5 = 18 * GROSSEUR_UNITE;
+        positionX2 = 6 * GROSSEUR_UNITE;
+        positionX3 = 3 * GROSSEUR_UNITE;
+        positionX4 = 18 * GROSSEUR_UNITE;
+        positionX5 = 19 * GROSSEUR_UNITE;
 
         positionY1 = 7 * GROSSEUR_UNITE;
-        positionY2 = 17 * GROSSEUR_UNITE;
-        positionY3 = 10 * GROSSEUR_UNITE;
-        positionY4 = 4 * GROSSEUR_UNITE;
-        positionY5 = 2 * GROSSEUR_UNITE;
+        positionY2 = 12 * GROSSEUR_UNITE;
+        positionY3 = 19 * GROSSEUR_UNITE;
+        positionY4 = 2 * GROSSEUR_UNITE;
+        positionY5 = 16 * GROSSEUR_UNITE;
 
-        GamePanel.blocX = 8 * GROSSEUR_UNITE;
-        GamePanel.blocY = 10 * GROSSEUR_UNITE;
+        GamePanel.blocX = 12 * GROSSEUR_UNITE;
+        GamePanel.blocY = 18 * GROSSEUR_UNITE;
         porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
         porteY = GROSSEUR_UNITE;
     }
@@ -56,19 +58,49 @@ public class Niveau2 {
             g.fillRect(i, GROSSEUR_UNITE * 4, GROSSEUR_UNITE, GROSSEUR_UNITE);
         }
 
-        for (int i = 3 * GROSSEUR_UNITE; i < LARGEUR_ECRAN; i++){
-            if(i < GamePanel.blocX && GamePanel.blocY == 16 * GROSSEUR_UNITE) {
-                g.drawRect(i, 16 * GROSSEUR_UNITE, 2, 2);
+        for (int i = 4 * GROSSEUR_UNITE; i < LARGEUR_ECRAN; i++){
+            if(i < GamePanel.blocX && GamePanel.blocY == 15 * GROSSEUR_UNITE) {
+                g.drawRect(i, 15 * GROSSEUR_UNITE, 2, 2);
                 g.setColor(Color.RED);
                 if(GamePanel.blocX > 3 * GROSSEUR_UNITE) {
-                    for (int j = GamePanel.blocY; j > 0; j--) {
-                        g.drawRect(GamePanel.blocX, j,2, 2);
-                        g.setColor(Color.RED);
+                    if(GamePanel.blocX > 15 * GROSSEUR_UNITE) {
+                        for (int j = GamePanel.blocY; j > 5 * GROSSEUR_UNITE; j--) {
+                            g.drawRect(GamePanel.blocX, j, 2, 2);
+                            g.setColor(Color.RED);
+                        }
+                    }
+                    else{
+                        for (int j = GamePanel.blocY; j > 0; j--) {
+                            g.drawRect(GamePanel.blocX, j, 2, 2);
+                            g.setColor(Color.RED);
+                        }
                     }
                 }
             }
-            else if (GamePanel.blocY != 16 * GROSSEUR_UNITE){
-                g.drawRect(i,16 * GROSSEUR_UNITE, 2, 2);
+            else if (GamePanel.blocY != 15 * GROSSEUR_UNITE && GamePanel.blocX > 2 * GROSSEUR_UNITE){
+                g.drawRect(i,15 * GROSSEUR_UNITE, 2, 2);
+                g.setColor(Color.RED);
+            }
+        }
+
+        for (int i = 5 * GROSSEUR_UNITE; i < HAUTEUR_ECRAN; i++){
+            if(i < GamePanel.blocY && GamePanel.blocX == 16 * GROSSEUR_UNITE) {
+                g.drawRect(16 * GROSSEUR_UNITE, i, 2, 2);
+                g.setColor(Color.RED);
+                if(GamePanel.blocY > 5 * GROSSEUR_UNITE) {
+                    if (GamePanel.blocY < 16 * GROSSEUR_UNITE) {
+                        for (int j = 4 * GROSSEUR_UNITE; j < GamePanel.blocX; j++) {
+                            g.drawRect(j, GamePanel.blocY, 2, 2);
+                        }
+                    } else {
+                        for (int j = 0; j < GamePanel.blocX; j++) {
+                            g.drawRect(j, GamePanel.blocY, 2, 2);
+                        }
+                    }
+                }
+            }
+            else if (GamePanel.blocX != 16 * GROSSEUR_UNITE && GamePanel.blocY > 4 * GROSSEUR_UNITE){
+                g.drawRect(16 * GROSSEUR_UNITE, i, 2, 2);
                 g.setColor(Color.RED);
             }
         }
@@ -87,65 +119,96 @@ public class Niveau2 {
         g.fillOval(positionX5, positionY5, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 
+
     public void collision(){
-        for (int z = 0; z <= GROSSEUR_UNITE * 9; z++) {
-            if (GamePanel.playerX == GROSSEUR_UNITE * 5 && GamePanel.playerY == z - 1) {
+        for (int z = 0; z <= GROSSEUR_UNITE * 17; z++) {
+            if (GamePanel.playerX == GROSSEUR_UNITE * 4 && GamePanel.playerY == z) {
                 GamePanel.mursL = true;
-            } else if (GamePanel.playerX == GROSSEUR_UNITE * 2 && GamePanel.playerY == z - 1) {
+            } else if (GamePanel.playerX == GROSSEUR_UNITE && GamePanel.playerY == z) {
                 GamePanel.mursR = true;
-            } else if ((GamePanel.playerX == GROSSEUR_UNITE * 3 || GamePanel.playerX == GROSSEUR_UNITE * 4) &&
-                    GamePanel.playerY == z + 1) {
+            } else if ((GamePanel.playerX == GROSSEUR_UNITE * 2 || GamePanel.playerX == GROSSEUR_UNITE * 3) &&
+                    GamePanel.playerY == 18 * GROSSEUR_UNITE) {
                 GamePanel.mursU = true;
             }
         }
-        for (int i = GROSSEUR_UNITE * 5; i < LARGEUR_ECRAN; i++) {
-            if (GamePanel.playerY == GROSSEUR_UNITE * 13 && GamePanel.playerX == i + 1) {
+        for (int i = LARGEUR_ECRAN; i > 13 * GROSSEUR_UNITE; i--) {
+            if (GamePanel.playerY == GROSSEUR_UNITE * 2 && GamePanel.playerX == i) {
                 GamePanel.mursD = true;
-            } else if (GamePanel.playerY == GROSSEUR_UNITE * 16 && GamePanel.playerX == i + 1) {
+            } else if (GamePanel.playerY == GROSSEUR_UNITE * 5 && GamePanel.playerX == i) {
                 GamePanel.mursU = true;
-            } else if ((GamePanel.playerY == GROSSEUR_UNITE * 14 || GamePanel.playerY == GROSSEUR_UNITE * 15) &&
-                    GamePanel.playerX == i - 1) {
+            } else if ((GamePanel.playerY == GROSSEUR_UNITE * 3 || GamePanel.playerY == GROSSEUR_UNITE * 4) &&
+                    GamePanel.playerX == i - GROSSEUR_UNITE) {
                 GamePanel.mursR = true;
             }
         }
 
-        if (GamePanel.blocY < GROSSEUR_UNITE * 13 && GamePanel.blocX == GROSSEUR_UNITE * 16) {
-            for (int i = 0; i < GamePanel.blocY; i++) {
-                if (GamePanel.playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i - 1) {
+        if (GamePanel.blocY > GROSSEUR_UNITE * 5 && GamePanel.blocX == GROSSEUR_UNITE * 16) {
+            for (int i = 4 * GROSSEUR_UNITE; i < GamePanel.blocY; i++) {
+                if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i) {
                     GamePanel.mursR = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i - 1){
+                else if (GamePanel.playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i){
                     GamePanel.mursL = true;
                     GamePanel.gameOver();
                 }
             }
-            for (int j = GamePanel.blocX; j < LARGEUR_ECRAN; j++) {
-                if (GamePanel.playerY == GamePanel.blocY && GamePanel.playerX == j - 1){
+            for (int j = 4 * GROSSEUR_UNITE; j < GamePanel.blocX; j++) {
+                if (GamePanel.playerY == GamePanel.blocY - GROSSEUR_UNITE && GamePanel.playerX == j){
                     GamePanel.mursU = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerY == GamePanel.blocY - 1 && GamePanel.playerX == j - 1){
+                else if (GamePanel.playerY == GamePanel.blocY - GROSSEUR_UNITE - 1 && GamePanel.playerX == j){
                     GamePanel.mursD = true;
                     GamePanel.gameOver();
                 }
             }
         }
         else {
-            for (int i = 0; i < GROSSEUR_UNITE * 14; i++) {
-                if (GamePanel. playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i - 1) {
+            for (int i = 4 * GROSSEUR_UNITE; i < LARGEUR_ECRAN; i++) {
+                if (GamePanel. playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i) {
                     GamePanel.mursR = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i - 1){
+                else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i){
+                    GamePanel.mursL = true;
+                    GamePanel.gameOver();
+                }
+            }
+        }
+
+        if (GamePanel.blocY == GROSSEUR_UNITE * 15 && GamePanel.blocX > GROSSEUR_UNITE * 4) {
+            for (int i = 0; i < GamePanel.blocY; i++) {
+                if (GamePanel.playerX == GamePanel.blocX - GROSSEUR_UNITE && GamePanel.playerY == i) {
+                    GamePanel.mursR = true;
+                    GamePanel.mursL = true;
+                    GamePanel.gameOver();
+                }
+               /* else if (GamePanel.playerX == GROSSEUR_UNITE * 14 && GamePanel.playerY == i){
+                    GamePanel.gameOver();
+                }*/
+            }
+            for (int j = 4 * GROSSEUR_UNITE; j < GamePanel.blocX; j++) {
+                if (GamePanel.playerY == GamePanel.blocY && GamePanel.playerX == j){
+                    GamePanel.mursU = true;
+                    GamePanel.gameOver();
+                }
+                else if (GamePanel.playerY == GamePanel.blocY - GROSSEUR_UNITE - 1 && GamePanel.playerX == j){
+                    GamePanel.mursD = true;
+                    GamePanel.gameOver();
+                }
+            }
+        }
+        else {
+            for (int i = 4 * GROSSEUR_UNITE; i < LARGEUR_ECRAN; i++) {
+                if (GamePanel. playerY == GROSSEUR_UNITE * 15 && GamePanel.playerX == i) {
+                    GamePanel.mursU = true;
                     GamePanel.mursL = true;
                     GamePanel.gameOver();
                 }
             }
         }
     }
-
-
 
     public void checkProies(){
         if((GamePanel.playerX == positionX1) && (GamePanel.playerY == positionY1)){

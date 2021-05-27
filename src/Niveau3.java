@@ -38,11 +38,11 @@ public class Niveau3 {
         positionX4 = 0;
         positionX5 = 0;
 
-        positionY1 = 4 * GROSSEUR_UNITE;
-        positionY2 = 5 * GROSSEUR_UNITE;
-        positionY3 = 6 * GROSSEUR_UNITE;
-        positionY4 = 7 * GROSSEUR_UNITE;
-        positionY5 = 8 * GROSSEUR_UNITE;
+        positionY1 = 8 * GROSSEUR_UNITE;
+        positionY2 = 9 * GROSSEUR_UNITE;
+        positionY3 = 10 * GROSSEUR_UNITE;
+        positionY4 = 11 * GROSSEUR_UNITE;
+        positionY5 = 12 * GROSSEUR_UNITE;
 
         GamePanel.blocX = 16 * GROSSEUR_UNITE;
         GamePanel.blocY = 12 * GROSSEUR_UNITE;

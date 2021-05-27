@@ -1,7 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 import javax.swing.*;
+import java.io.File;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener{
@@ -23,6 +27,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public static boolean mursD = false;
     public static boolean instruction = true;
     public static boolean storyline = false;
+    public boolean compteurMusique = true;
 
     public static int blocX;
     public static int blocY;
@@ -36,6 +41,7 @@ public class GamePanel extends JPanel implements ActionListener{
         N2,
         N3,
     }
+
     public static STATE state = STATE.MENU;
     public static NIVEAU niveau = NIVEAU.M;
     Niveau1 niveau1;
@@ -91,14 +97,16 @@ public class GamePanel extends JPanel implements ActionListener{
     public void niveau1(){
         state = STATE.GAME;
         niveau = NIVEAU.N1;
-        GamePanel.blocX = 8 * GROSSEUR_UNITE;
-        GamePanel.blocY = 10 * GROSSEUR_UNITE;
+        GamePanel.blocX = 16 * GROSSEUR_UNITE;
+        GamePanel.blocY = 17 * GROSSEUR_UNITE;
         timer.start();
     }
 
     public void niveau2(){
         state = STATE.GAME;
         niveau = NIVEAU.N2;
+        GamePanel.blocX = 12 * GROSSEUR_UNITE;
+        GamePanel.blocY = 18 * GROSSEUR_UNITE;
         timer.start();
     }
 
@@ -129,7 +137,7 @@ public class GamePanel extends JPanel implements ActionListener{
                 niveau1.finNiveau();
             }
             else if(niveau == NIVEAU.N2) {
-                niveau3.finNiveau();
+                niveau2.finNiveau();
             }
             else if(niveau == NIVEAU.N3) {
                 niveau3.finNiveau();
@@ -243,28 +251,67 @@ public class GamePanel extends JPanel implements ActionListener{
         }
     }
 
-  /*  public void verifierCollisionBlocVerre() {
-        if (niveau == NIVEAU.N1){
-            niveau1.toucheLeBloc();
+    public void playMusic(){
+        musicStuff musicObject = new musicStuff();
+        if (niveau == NIVEAU.N1 && compteurMusique){
+            String filepath = "src/Cats.level1.wav";
+            musicObject.playMusic(filepath);
+            compteurMusique = false;
 
-        }
-        else if (niveau == NIVEAU.N3) {
+        } else if (niveau == NIVEAU.N2 && compteurMusique) {
+            String filepath = "src/mkanddk3.wav";
+            musicObject.playMusic(filepath);
+            compteurMusique = false;
 
+        } else if (niveau == NIVEAU.N3 && compteurMusique){
+            String filepath = "src/lust.music.wav";
+            musicObject.playMusic(filepath);
+            compteurMusique = false;
+
+        } else if(niveau == NIVEAU.M && !compteurMusique) {
+            compteurMusique = false;
         }
-    } */
+    }
+
+    public class musicStuff{
+        void playMusic(String musicLocation){
+            try {
+                File musicPath = new File(musicLocation);
+                if (musicPath.exists()) {
+                    AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInput);
+                    if(compteurMusique){
+                        clip.start();
+                    }
+                    else{
+                        clip.stop();
+                    }
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+                } else {
+                    System.out.println("ce clip n'existe pas");
+                }
+
+            } catch (Exception ex){
+                ex.printStackTrace();
+
+            }
+        }
+    }
 
     public static void gameOver(){
        if(niveau == NIVEAU.N1){
            playerX = 0;
            playerY = 0;
-           blocX = 12 * GROSSEUR_UNITE;
-           blocY = 16 * GROSSEUR_UNITE;
+           blocX = 16 * GROSSEUR_UNITE;
+           blocY = 17 * GROSSEUR_UNITE;
        }
        else if(niveau == NIVEAU.N2){
            playerX = 0;
            playerY = 0;
-           blocX = 5 * GROSSEUR_UNITE;
-           blocY = 12 * GROSSEUR_UNITE;
+           blocX = 12 * GROSSEUR_UNITE;
+           blocY = 18 * GROSSEUR_UNITE;
        }
        else if(niveau == NIVEAU.N3){
            playerX = 0;
@@ -272,7 +319,6 @@ public class GamePanel extends JPanel implements ActionListener{
            blocX = 5 * GROSSEUR_UNITE;
            blocY = 12 * GROSSEUR_UNITE;
        }
-        proies = proies - 5;
     }
 
     @Override
@@ -281,6 +327,9 @@ public class GamePanel extends JPanel implements ActionListener{
             verifierCollision();
             checkProies();
             finNiveau();
+            if(state == STATE.GAME){
+                playMusic();
+            }
         }
         repaint();
     }
