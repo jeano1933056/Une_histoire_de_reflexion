@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -7,8 +6,6 @@ public class Niveau1 {
 
     private int GROSSEUR_UNITE;
     private int LARGEUR_ECRAN;
-    private int HAUTEUR_ECRAN;
-    private boolean check;
 
     private int positionX1;
     private int positionX2;
@@ -22,96 +19,65 @@ public class Niveau1 {
     private int positionY4;
     private int positionY5;
 
-    private int blocX;
-    private int blocY;
     private int porteX;
     private int porteY;
-    private int checkX;
-    private int checkY;
-
-    private int playerX;
-    private int playerY;
-
 
     public Niveau1() {
         GROSSEUR_UNITE = GamePanel.GROSSEUR_UNITE;
         LARGEUR_ECRAN = GamePanel.LARGEUR_ECRAN;
-        HAUTEUR_ECRAN = GamePanel.HAUTEUR_ECRAN;
-        check = false;
+        positionX1 = GROSSEUR_UNITE;
+        positionX2 = 4 * GROSSEUR_UNITE;
+        positionX3 = 8 * GROSSEUR_UNITE;
+        positionX4 = 12 * GROSSEUR_UNITE;
+        positionX5 = 18 * GROSSEUR_UNITE;
 
-        playerX = GamePanel.playerX;
-        playerY = GamePanel.playerY;
+        positionY1 = 7 * GROSSEUR_UNITE;
+        positionY2 = 17 * GROSSEUR_UNITE;
+        positionY3 = 10 * GROSSEUR_UNITE;
+        positionY4 = 4 * GROSSEUR_UNITE;
+        positionY5 = 2 * GROSSEUR_UNITE;
 
-        positionX1 = 0;
-        positionX2 = 0;
-        positionX3 = 0;
-        positionX4 = 0;
-        positionX5 = 0;
-
-        positionY1 = 4 * GROSSEUR_UNITE;
-        positionY2 = 5 * GROSSEUR_UNITE;
-        positionY3 = 6 * GROSSEUR_UNITE;
-        positionY4 = 7 * GROSSEUR_UNITE;
-        positionY5 = 8 * GROSSEUR_UNITE;
-
-        blocX = 6 * GROSSEUR_UNITE;
-        blocY = 12 * GROSSEUR_UNITE;
+        GamePanel.blocX = 8 * GROSSEUR_UNITE;
+        GamePanel.blocY = 10 * GROSSEUR_UNITE;
         porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
         porteY = GROSSEUR_UNITE;
-        checkX = 3 * GROSSEUR_UNITE;
-        checkY = 16 * GROSSEUR_UNITE;
-
-
-
-        Popup pop = new Popup();
     }
 
-
     public void rendu(Graphics g){
-        for (int i = 0; i < GROSSEUR_UNITE * 6; i++) {
+
+        for (int i = 0; i < GROSSEUR_UNITE * 8; i++) {
             g.setColor(Color.GRAY);
-            g.fillRect(i,GROSSEUR_UNITE * 2, GROSSEUR_UNITE, GROSSEUR_UNITE);
-            g.fillRect(i,GROSSEUR_UNITE * 3, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            g.fillRect(GROSSEUR_UNITE * 3, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            g.fillRect(GROSSEUR_UNITE * 4, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
         }
-        for (int i = GROSSEUR_UNITE * 2; i < HAUTEUR_ECRAN; i++) {
+        for (int i = GROSSEUR_UNITE * 6; i < LARGEUR_ECRAN; i++) {
             g.setColor(Color.GRAY);
-            g.fillRect(GROSSEUR_UNITE * 14, i,  GROSSEUR_UNITE, GROSSEUR_UNITE);
-            g.fillRect(GROSSEUR_UNITE * 15, i, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            g.fillRect(i, GROSSEUR_UNITE * 14, GROSSEUR_UNITE, GROSSEUR_UNITE);
+            g.fillRect(i, GROSSEUR_UNITE * 15, GROSSEUR_UNITE, GROSSEUR_UNITE);
         }
 
-        for (int i = 4 * GROSSEUR_UNITE; i < HAUTEUR_ECRAN; i++){
-            if(i < blocY && blocX == 4 * GROSSEUR_UNITE) {
-                g.drawRect(4 * GROSSEUR_UNITE, i, 2, 2);
+        for (int i = 0; i < 14 * GROSSEUR_UNITE; i++){
+            if(i < GamePanel.blocY && GamePanel.blocX == 16 * GROSSEUR_UNITE) {
+                g.drawRect(16 * GROSSEUR_UNITE, i, 2, 2);
                 g.setColor(Color.RED);
-                if(blocY > 4 * GROSSEUR_UNITE) {
-                    for (int j = LARGEUR_ECRAN; j < blocX; j++) {
-                        g.drawRect(j, blocY, 2, 2);
+                if(GamePanel.blocY < 14 * GROSSEUR_UNITE) {
+                    for (int j = GamePanel.blocX; j < LARGEUR_ECRAN; j++) {
+                        g.drawRect(j, GamePanel.blocY, 2, 2);
                         g.setColor(Color.RED);
-                    }
-                    for(int j = 0; j < blocX; j++){
-                        g.drawRect(j, blocY, 2, 2);
                     }
                 }
             }
-            else if (blocX != 4 * GROSSEUR_UNITE){
-                g.drawRect(4 * GROSSEUR_UNITE, i, 2, 2);
+            else if (GamePanel.blocX != 16 * GROSSEUR_UNITE){
+                g.drawRect(16 * GROSSEUR_UNITE, i, 2, 2);
                 g.setColor(Color.RED);
             }
         }
-        porteX = LARGEUR_ECRAN - (GROSSEUR_UNITE * 2);
-        porteY = GROSSEUR_UNITE;
-        if (check) {
-            g.setColor(Color.RED);
-        }
-        else {
-            g.setColor(Color.BLACK);
-        }
+
+        g.setColor(Color.RED);
         g.fillRect(porteX, porteY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
-        g.fillRect(checkX, checkY, GROSSEUR_UNITE, GROSSEUR_UNITE);
-
         g.setColor(Color.YELLOW);
-        g.fillRect(blocX, blocY, GROSSEUR_UNITE, GROSSEUR_UNITE);
+        g.fillRect(GamePanel.blocX, GamePanel.blocY, GROSSEUR_UNITE, GROSSEUR_UNITE);
 
         g.setColor(Color.BLUE);
         g.fillOval(positionX1, positionY1, GROSSEUR_UNITE, GROSSEUR_UNITE);
@@ -121,59 +87,45 @@ public class Niveau1 {
         g.fillOval(positionX5, positionY5, GROSSEUR_UNITE, GROSSEUR_UNITE);
     }
 
-    public void toucheLeBloc(){
-        if (GamePanel.playerX == blocX && GamePanel.playerY == blocY && blocX!=0){
-            blocX = blocX - GROSSEUR_UNITE;
-        } else if (GamePanel.playerX + GROSSEUR_UNITE == blocX && GamePanel.playerY == blocY){
-            blocX = blocX + GROSSEUR_UNITE;
-        } else if (GamePanel.playerY == blocY + GROSSEUR_UNITE && GamePanel.playerX == blocX){
-            blocY = blocY - GROSSEUR_UNITE;
-        } else if (GamePanel.playerY == blocY - GROSSEUR_UNITE && GamePanel.playerX == blocX){
-            blocY = blocY + GROSSEUR_UNITE;
-        }
-    }
-
     public void collision(){
-        for (int z = 0; z <= GROSSEUR_UNITE * 7; z++) {
-            if (GamePanel.playerY == GROSSEUR_UNITE * 4 && GamePanel.playerX == z - 1) {
-                GamePanel.mursU = true;
-            } else if (GamePanel.playerY == GROSSEUR_UNITE && GamePanel.playerX == z - 1) {
-                GamePanel.mursD = true;
-            } else if ((GamePanel.playerY == GROSSEUR_UNITE * 2 || GamePanel.playerY == GROSSEUR_UNITE * 3) &&
-                    GamePanel.playerX == z + 1) {
+        for (int z = 0; z <= GROSSEUR_UNITE * 9; z++) {
+            if (GamePanel.playerX == GROSSEUR_UNITE * 5 && GamePanel.playerY == z - 1) {
                 GamePanel.mursL = true;
-            }
-        }
-        for (int z = 2 * GROSSEUR_UNITE; z <= LARGEUR_ECRAN; z++) {
-            if (GamePanel.playerX == GROSSEUR_UNITE * 13 && GamePanel.playerY == z) {
+            } else if (GamePanel.playerX == GROSSEUR_UNITE * 2 && GamePanel.playerY == z - 1) {
                 GamePanel.mursR = true;
-            } else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == z) {
-                GamePanel.mursL = true;
-            } else if ((GamePanel.playerX == GROSSEUR_UNITE * 14 || GamePanel.playerX == GROSSEUR_UNITE * 15) &&
-                    GamePanel.playerY == z - GROSSEUR_UNITE) {
+            } else if ((GamePanel.playerX == GROSSEUR_UNITE * 3 || GamePanel.playerX == GROSSEUR_UNITE * 4) &&
+                    GamePanel.playerY == z + 1) {
+                GamePanel.mursU = true;
+            }
+        }
+        for (int i = GROSSEUR_UNITE * 5; i < LARGEUR_ECRAN; i++) {
+            if (GamePanel.playerY == GROSSEUR_UNITE * 13 && GamePanel.playerX == i + 1) {
                 GamePanel.mursD = true;
+            } else if (GamePanel.playerY == GROSSEUR_UNITE * 16 && GamePanel.playerX == i + 1) {
+                GamePanel.mursU = true;
+            } else if ((GamePanel.playerY == GROSSEUR_UNITE * 14 || GamePanel.playerY == GROSSEUR_UNITE * 15) &&
+                    GamePanel.playerX == i - 1) {
+                GamePanel.mursR = true;
             }
         }
 
-
-
-        if (blocY > GROSSEUR_UNITE * 3 && blocX == GROSSEUR_UNITE * 4) {
-            for (int i = 3 * GROSSEUR_UNITE; i < blocY; i++) {
-                if (GamePanel.playerX == GROSSEUR_UNITE * 3 && GamePanel.playerY == i - 1) {
+        if (GamePanel.blocY < GROSSEUR_UNITE * 13 && GamePanel.blocX == GROSSEUR_UNITE * 16) {
+            for (int i = 0; i < GamePanel.blocY; i++) {
+                if (GamePanel.playerX == GROSSEUR_UNITE * 15 && GamePanel.playerY == i - 1) {
                     GamePanel.mursR = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerX == GROSSEUR_UNITE * 4 && GamePanel.playerY == i - 1){
+                else if (GamePanel.playerX == GROSSEUR_UNITE * 16 && GamePanel.playerY == i - 1){
                     GamePanel.mursL = true;
                     GamePanel.gameOver();
                 }
             }
-            for (int j = 0; j < blocX; j++) {
-                if (GamePanel.playerY == blocY && GamePanel.playerX == j - 1){
+            for (int j = GamePanel.blocX; j < LARGEUR_ECRAN; j++) {
+                if (GamePanel.playerY == GamePanel.blocY && GamePanel.playerX == j - 1){
                     GamePanel.mursU = true;
                     GamePanel.gameOver();
                 }
-                else if (GamePanel.playerY == blocY - GROSSEUR_UNITE && GamePanel.playerX == j - 1){
+                else if (GamePanel.playerY == GamePanel.blocY - 1 && GamePanel.playerX == j - 1){
                     GamePanel.mursD = true;
                     GamePanel.gameOver();
                 }
@@ -192,6 +144,8 @@ public class Niveau1 {
             }
         }
     }
+
+
 
     public void checkProies(){
         if((GamePanel.playerX == positionX1) && (GamePanel.playerY == positionY1)){
@@ -222,17 +176,19 @@ public class Niveau1 {
             positionX5 = -1 * GROSSEUR_UNITE;
             positionY5 = -1 * GROSSEUR_UNITE;
         }
-        if((GamePanel.playerX == checkX) && (GamePanel.playerY == checkY)){
-            check = true;
-        }
     }
 
     public void finNiveau(){
         if (GamePanel.playerY == porteY && GamePanel.playerX == porteX) {
             GamePanel.menu();
+            GamePanel.playerX = GROSSEUR_UNITE;
+            GamePanel.playerY = GROSSEUR_UNITE;
         }
     }
 
     public void storyline(){
+        if (GamePanel.playerY == porteY && GamePanel.playerX == porteX) {
+            GamePanel.storyline = true;
+        }
     }
 }

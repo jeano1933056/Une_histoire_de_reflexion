@@ -13,24 +13,19 @@ public class GamePanel extends JPanel implements ActionListener{
     static final int BORDER_NUMBER_X = ((NOMBRE_BLOCS_X - 1) * GROSSEUR_UNITE) - 1;
     static final int NOMBRE_BLOCS_Y = (HAUTEUR_ECRAN/GROSSEUR_UNITE);
     static final int BORDER_NUMBER_Y = ((NOMBRE_BLOCS_Y - 1) * GROSSEUR_UNITE) - 1;
-    static final int GAME_UNITS = (LARGEUR_ECRAN * HAUTEUR_ECRAN)/GROSSEUR_UNITE;
     public static int proies;
     public static int playerX = GROSSEUR_UNITE;
     public static int playerY = GROSSEUR_UNITE;
-    public static char direction = 'R';
-    int[][] mur = new int[LARGEUR_ECRAN][HAUTEUR_ECRAN];
+
     public static boolean mursL = false;
     public static boolean mursR = false;
     public static boolean mursU = false;
     public static boolean mursD = false;
+    public static boolean instruction = true;
+    public static boolean storyline = false;
 
-    public static boolean blocR = false;
-    public static boolean blocL = false;
-    public static boolean blocU = false;
-    public static boolean blocD = false;
-
-    //public static int blocX = 16 * GROSSEUR_UNITE;
-    //public static int blocY = 12 * GROSSEUR_UNITE;
+    public static int blocX;
+    public static int blocY;
     public static enum STATE{
         GAME,
         MENU
@@ -40,17 +35,14 @@ public class GamePanel extends JPanel implements ActionListener{
         N1,
         N2,
         N3,
-        N4,
-        N5,
-        N6,
-        N7
     }
     public static STATE state = STATE.MENU;
     public static NIVEAU niveau = NIVEAU.M;
     Niveau1 niveau1;
     Niveau2 niveau2;
     Niveau3 niveau3;
-
+    Instruction instruction2;
+    Histoire histoire;
     MainMenu menu;
 
     static final int DELAY = 50;
@@ -58,14 +50,11 @@ public class GamePanel extends JPanel implements ActionListener{
     static boolean gameOn = false;
     public static Timer timer;
 
-
     Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
-
 
     boolean ouvert = false;
 
     JLabel label = new JLabel("PAUSE");
-
 
 
     GamePanel() {
@@ -74,17 +63,13 @@ public class GamePanel extends JPanel implements ActionListener{
         niveau1 = new Niveau1();
         niveau2 = new Niveau2();
         niveau3 = new Niveau3();
+        instruction2 = new Instruction();
+        histoire = new Histoire();
 
         this.setPreferredSize(new Dimension(LARGEUR_ECRAN, HAUTEUR_ECRAN));
         this.setBackground(new Color(244, 202, 224));
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-
-        //blocXniveau1 = niveau1.getBlocXniveau1();
-        //blocXniveau1 = niveau1.getBlocXniveau1();
-        //blocYniveau1 = niveau1.getBlocYniveau1();
-
-
 
         this.setCursor(cursor);
         this.add(label);
@@ -93,7 +78,7 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
 
-    public void start() {
+    public void start(){
         ouvert = true;
         timer = new Timer(DELAY, this);
     }
@@ -101,12 +86,13 @@ public class GamePanel extends JPanel implements ActionListener{
     public static void menu(){
         state = STATE.MENU;
         niveau = NIVEAU.M;
-        //timer.stop();
     }
 
     public void niveau1(){
         state = STATE.GAME;
         niveau = NIVEAU.N1;
+        GamePanel.blocX = 8 * GROSSEUR_UNITE;
+        GamePanel.blocY = 10 * GROSSEUR_UNITE;
         timer.start();
     }
 
@@ -119,62 +105,116 @@ public class GamePanel extends JPanel implements ActionListener{
     public void niveau3(){
         state = STATE.GAME;
         niveau = NIVEAU.N3;
+        GamePanel.blocX = 16 * GROSSEUR_UNITE;
+        GamePanel.blocY = 12 * GROSSEUR_UNITE;
         timer.start();
     }
 
     public void finNiveau(){
         if(niveau == NIVEAU.N1){
-            niveau1.finNiveau();
+            niveau1.storyline();
+        }
+        else if(niveau == NIVEAU.N2){
+            niveau2.storyline();
         }
         else if(niveau == NIVEAU.N3){
-            niveau3.finNiveau();
+            niveau3.storyline();
         }
     }
 
-    public void pause() {
+    public void callStoryline(){
+        if(storyline){
+            storyline = false;
+            if(niveau == NIVEAU.N1) {
+                niveau1.finNiveau();
+            }
+            else if(niveau == NIVEAU.N2) {
+                niveau3.finNiveau();
+            }
+            else if(niveau == NIVEAU.N3) {
+                niveau3.finNiveau();
+            }
+        }
+    }
+
+    public void callInstruction(){
+        if (instruction){
+            instruction = false;
+            timer.start();
+        }
+        else {
+            instruction = true;
+        }
+    }
+
+    public void pause(){
         label.setFont(new Font("Ink Free", Font.BOLD, 40));
         label.setVisible(true);
         gameOn = true;
         timer.stop();
     }
 
-    public void resume() {
+    public void resume(){
         label.setFont(new Font("Ink Free", Font.BOLD, 40));
         label.setVisible(false);
         gameOn = false;
         timer.start();
     }
-    public void paintComponent(Graphics g) {
+
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
         dessiner(g);
     }
 
     public void dessiner(Graphics g) {
         if(state == STATE.GAME) {
-            if (ouvert) {
+            if(!storyline) {
+                if (ouvert) {
                 g.setColor(new Color(100, 166, 189));
                 g.fillRect(playerX, playerY, GROSSEUR_UNITE, GROSSEUR_UNITE);
             }
-            for (int i = 0; i < (HAUTEUR_ECRAN / GROSSEUR_UNITE); i++) {
-                g.setColor(new Color(173, 167, 201));
-                g.drawLine(i * GROSSEUR_UNITE, 0, i * GROSSEUR_UNITE, HAUTEUR_ECRAN);
-                g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
+
+                for (int i = 0; i < (HAUTEUR_ECRAN / GROSSEUR_UNITE); i++) {
+                    g.setColor(new Color(173, 167, 201));
+                    g.drawLine(i * GROSSEUR_UNITE, 0, i * GROSSEUR_UNITE, HAUTEUR_ECRAN);
+                    g.drawLine(0, i * GROSSEUR_UNITE, LARGEUR_ECRAN, i * GROSSEUR_UNITE);
+                }
             }
 
             if(niveau == NIVEAU.N1){
-                niveau1.rendu(g);
+                if(!storyline){
+                    niveau1.rendu(g);
+                }
+                else{
+                    histoire.renduN1(g);
+                }
             }
 
             if(niveau == NIVEAU.N2){
-                niveau2.rendu(g);
+                if(!storyline){
+                    niveau2.rendu(g);
+                }
+                else{
+                    histoire.renduN2(g);
+                }
             }
 
             if (niveau == NIVEAU.N3) {
-                niveau3.rendu(g);
+                if(!storyline){
+                    niveau3.rendu(g);
+                }
+                else{
+                    histoire.renduN3(g);
+                }
             }
         }
         else if (state == STATE.MENU) {
-           menu.rendu(g);
+            if(!instruction) {
+                menu.rendu(g);
+            }
+            else{
+                instruction2.rendu(g);
+            }
         }
 
     }
@@ -183,49 +223,27 @@ public class GamePanel extends JPanel implements ActionListener{
         if(niveau == NIVEAU.N1){
             niveau1.checkProies();
         }
+        else if(niveau == NIVEAU.N2){
+            niveau2.checkProies();
+        }
         else if(niveau == NIVEAU.N3){
             niveau3.checkProies();
         }
-        /*if((playerX == positionX1) && (playerY == positionY1)){
-            proies++;
-            System.out.println(proies);
-            positionX1 = -1 * GROSSEUR_UNITE;
-            positionY1 = -1 * GROSSEUR_UNITE;
-        }
-        else if((playerX == positionX2) && (playerY == positionY2)){
-            proies++;
-            System.out.println(proies);
-            positionX2 = -1 * GROSSEUR_UNITE;
-            positionY2 = -1 * GROSSEUR_UNITE;
-        }
-        else if((playerX == positionX3) && (playerY == positionY3)){
-            proies++;
-            System.out.println(proies);
-            positionX3 = -1 * GROSSEUR_UNITE;
-            positionY3 = -1 * GROSSEUR_UNITE;
-        } else if((playerX == positionX4) && (playerY == positionY4)){
-            proies++;
-            System.out.println(proies);
-            positionX4 = -1 * GROSSEUR_UNITE;
-            positionY4 = -1 * GROSSEUR_UNITE;
-        } else if((playerX == positionX5) && (playerY == positionY5)){
-            proies++;
-            System.out.println(proies);
-            positionX5 = -1 * GROSSEUR_UNITE;
-            positionY5 = -1 * GROSSEUR_UNITE;
-        } */
     }
 
     public void verifierCollision() {
         if (niveau == NIVEAU.N1){
             niveau1.collision();
         }
+        else if (niveau == NIVEAU.N2) {
+            niveau2.collision();
+        }
         else if (niveau == NIVEAU.N3) {
             niveau3.collision();
         }
     }
 
-    public void verifierCollisionBlocVerre() {
+  /*  public void verifierCollisionBlocVerre() {
         if (niveau == NIVEAU.N1){
             niveau1.toucheLeBloc();
 
@@ -233,11 +251,27 @@ public class GamePanel extends JPanel implements ActionListener{
         else if (niveau == NIVEAU.N3) {
 
         }
-    }
+    } */
 
     public static void gameOver(){
-        playerX = 0;
-        playerY = 0;
+       if(niveau == NIVEAU.N1){
+           playerX = 0;
+           playerY = 0;
+           blocX = 12 * GROSSEUR_UNITE;
+           blocY = 16 * GROSSEUR_UNITE;
+       }
+       else if(niveau == NIVEAU.N2){
+           playerX = 0;
+           playerY = 0;
+           blocX = 5 * GROSSEUR_UNITE;
+           blocY = 12 * GROSSEUR_UNITE;
+       }
+       else if(niveau == NIVEAU.N3){
+           playerX = 0;
+           playerY = 0;
+           blocX = 5 * GROSSEUR_UNITE;
+           blocY = 12 * GROSSEUR_UNITE;
+       }
         proies = proies - 5;
     }
 
@@ -246,7 +280,6 @@ public class GamePanel extends JPanel implements ActionListener{
         if (ouvert) {
             verifierCollision();
             checkProies();
-            verifierCollisionBlocVerre();
             finNiveau();
         }
         repaint();
@@ -258,7 +291,10 @@ public class GamePanel extends JPanel implements ActionListener{
 
             switch(e.getKeyCode()){
                 case KeyEvent.VK_LEFT:
-                    if (playerX > 0 && timer.isRunning() && state == STATE.GAME) {
+                    if(playerX == blocX + GROSSEUR_UNITE && playerY == blocY){
+                        blocX = blocX - GROSSEUR_UNITE;
+                    }
+                    if (playerX > 0 && timer.isRunning() && state == STATE.GAME && !storyline) {
                         if(!mursL) {
                             playerX = playerX - GROSSEUR_UNITE;
                         }
@@ -267,7 +303,10 @@ public class GamePanel extends JPanel implements ActionListener{
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (playerX <= BORDER_NUMBER_X && timer.isRunning() && state == STATE.GAME) {
+                    if(playerX == blocX - GROSSEUR_UNITE && playerY == blocY){
+                        blocX = blocX + GROSSEUR_UNITE;
+                    }
+                    if (playerX <= BORDER_NUMBER_X && timer.isRunning() && state == STATE.GAME && !storyline) {
                         if(!mursR)
                             playerX = playerX + GROSSEUR_UNITE;
                         else
@@ -276,7 +315,10 @@ public class GamePanel extends JPanel implements ActionListener{
 
                     break;
                 case KeyEvent.VK_UP:
-                    if (playerY > 0 && timer.isRunning() && state == STATE.GAME) {
+                    if(playerX == blocX && playerY == blocY + GROSSEUR_UNITE){
+                        blocY = blocY - GROSSEUR_UNITE;
+                    }
+                    if (playerY > 0 && timer.isRunning() && state == STATE.GAME && !storyline) {
                         if(!mursU)
                             playerY = playerY - GROSSEUR_UNITE;
                         else
@@ -284,14 +326,12 @@ public class GamePanel extends JPanel implements ActionListener{
                     }
                     break;
 
-                case KeyEvent.VK_E:
-                    if (niveau3.getBlocY() > 0 && timer.isRunning() && state == STATE.GAME) {
-                        niveau3.setBlocY(niveau3.getBlocY() - GROSSEUR_UNITE);
-                    }
-                    break;
 
                 case KeyEvent.VK_DOWN:
-                    if (playerY <= BORDER_NUMBER_Y && timer.isRunning() && state == STATE.GAME) {
+                    if(playerX == blocX  && playerY == blocY - GROSSEUR_UNITE){
+                        blocY = blocY + GROSSEUR_UNITE;
+                    }
+                    if (playerY <= BORDER_NUMBER_Y && timer.isRunning() && state == STATE.GAME && !storyline) {
                         if(!mursD)
                             playerY = playerY + GROSSEUR_UNITE;
                         else
@@ -306,19 +346,34 @@ public class GamePanel extends JPanel implements ActionListener{
                         pause();
                     }
                     break;
+
                 case KeyEvent.VK_1 :
-                    if(state == STATE.MENU) {
+                    if(state == STATE.MENU && !instruction) {
                         niveau1();
                     }
+                    break;
+
                 case KeyEvent.VK_2 :
-                    if(state == STATE.MENU) {
+                    if(state == STATE.MENU && !instruction) {
                         niveau2();
                     }
                     break;
 
                 case KeyEvent.VK_3 :
-                    if(state == STATE.MENU) {
+                    if(state == STATE.MENU && !instruction) {
                         niveau3();
+                    }
+                    break;
+
+                case KeyEvent.VK_F :
+                    if(state == STATE.MENU){
+                       callInstruction();
+                    }
+                    break;
+
+                case KeyEvent.VK_D :
+                    if(state == STATE.GAME) {
+                        callStoryline();
                     }
                     break;
             }
